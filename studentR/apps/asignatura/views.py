@@ -132,7 +132,7 @@ def mayorActivo(listaD, listaR):
             else:
                 listaD.pop(i)
                 listaR.pop(i)
-                mayorActivo(listaD, listaR)
+                return mayorActivo(listaD, listaR)
 
 
 def recomendador(listaDocentes, listaRespuestas):
@@ -161,7 +161,7 @@ def recomendador(listaDocentes, listaRespuestas):
         posicion = listaRespuestas.index(max(listaRespuestas))
         listaDocentes.pop(posicion)
         listaRespuestas.pop(posicion)
-        recomendador(listaDocentes, listaRespuestas)
+        return recomendador(listaDocentes, listaRespuestas)
 
 
 # DE AQUI PARA ABAJO SON METODOS PARA HACER SPEARMAN
