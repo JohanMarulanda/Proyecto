@@ -1,0 +1,139 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+
+{% block css %}
+<meta charset="utf-8" />
+<link rel="apple-touch-icon" sizes="76x76" href="{% static '/img/apple-icon.png' %}">
+<link rel="icon" type="image/png" href="{% static '/img/favicon.ico' %}">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>StudentR - Un sistema recomendador de cursos</title>
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+    name='viewport' />
+<!--     Fonts and icons     -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+<!-- CSS Files -->
+<link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet" />
+<link href="{% static '/css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
+<!-- CSS Just for demo purpose, don't include it in your project -->
+<link href="{% static '/css/demo.css' %}" rel="stylesheet" />
+<link href="{% static '/css/lumino.min.css' %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+{% endblock css %}
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block reabout %}
+{% url 'show' %}
+{% endblock reabout %}
+
+{% block about %}
+Añadir Comentario
+{% endblock about %}
+
+<!-- SECCION PARA BUSCAR UNA ASIGNATURA -->
+{% block resingup %}
+{% url 'formularioBusqueda' %}
+{% endblock resingup%}
+
+{% block singup %}
+Buscar Recomendacion
+{% endblock singup %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block singin %}
+Realizar Pregunta
+{% endblock singin %}
+
+
+<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
+{% block añadirMenu %}
+<li>
+    <a class="nav-link" href="#">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Responder Preguntas<output></output></p>
+    </a>
+</li>
+{% endblock añadirMenu %}
+
+{% block board %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="#pablo">
+            <span class="no-icon">Account</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">
+            <span class="no-icon">Log out</span>
+        </a>
+    </li>
+</ul>
+{% endblock board %}
+
+{% block main %}
+<div class="col-md-8">
+    <form method="POST" class="post-form" action="{% url 'añadir_comentario' asignatura.id %}">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header ">
+                <h4 class="card-title">Añadar comentario</h4>
+                <p class="card-category">Por favor, escriba lo más entendible posible.</p>
+            </div>
+            <br>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Docente:</label>
+                    <div class="col-sm-4">
+                        <input disabled class="form-control" type="text" value="{{ asignatura.docente }}" />
+                        <input type="hidden" name="nombre" value="{{ asignatura.docente }}" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Asignatura:</label>
+                    <div class="col-sm-4">
+                        <input disabled class="form-control" type="text" value="{{ asignatura.nombre }}" />
+                        <input type="hidden" name="asignatura" value="{{ asignatura.nombre }}" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Periodo:</label>
+                    <div class="col-sm-4">
+                        <input disabled class="form-control" type="text" value="{{ asignatura.periodo }}" />
+                        <input type="hidden" name="periodo" value="{{ asignatura.periodo }}" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <textarea name="comentario" rows="10" cols="80" required value="{{ comentario.comentario }}"
+                            placeholder="Escribe aquí tu comentario..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <label class="col-sm-1 col-form-label"></label>
+                <div class="col-sm-4">
+                    <button type="submit" class="btn btn-md btn-info">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+<!--   Core JS Files   -->
+<script src="{% static '/js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static '/js/core/popper.min.js' %}"></script>
+<script src="{% static '/js/core/bootstrap.min.js' %}"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{% static '/js/plugins/bootstrap-switch.js' %}"></script>
+<!--  Chartist Plugin  -->
+<script src="{% static '/js/plugins/chartist.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static '/js/plugins/bootstrap-notify.js' %}"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static '/js/demo.js' %}"></script>
+{% endblock scripts %}

@@ -1,0 +1,161 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% block css %}
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static '/img/apple-icon.png' %}">
+  <link rel="icon" type="image/png" href="{% static '/img/favicon.ico' %}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>StudentR - Un sistema recomendador de cursos</title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+  <!-- CSS Files -->
+  <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="{% static '/css/demo.css' %}" rel="stylesheet" />
+  {% endblock %}
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sidebar" data-image="{% static 'img/sidebar-5.jpg' %}" data-color="blue" >
+
+      <div class="sidebar-wrapper">
+        <div class="logo">
+          <a href="{% url 'index' %}" class="simple-text">
+            StudentR
+          </a>
+        </div>
+        {% block navigation %}
+        <ul class="nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% block reabout %} #about {% endblock reabout %}">
+              <i class="nc-icon nc-chart-pie-35"></i>
+              <p>{% block about%} About {% endblock about %}</p>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" href="{% block resingup %} #portfolio {% endblock resingup %}">
+              <i class="nc-icon nc-chart-pie-35"></i>
+              <p>{% block singup %} Sign up {% endblock singup %}</p>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" href="{% block resingin %} {% url 'login' %} {% endblock resingin %}">
+              <i class="nc-icon nc-chart-pie-35"></i>
+              <p>{% block singin %} Sign in {% endblock singin %}<output></output></p>
+            </a>
+          </li>
+          {% block añadirMenu %}
+          {% endblock añadirMenu %}
+        </ul>
+       </div>
+     </div>
+    {% endblock navigation %}
+    
+    <div class="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg " color-on-scroll="500">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#pablo"> Dashboard </a>
+          <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar burger-lines"></span>
+            <span class="navbar-toggler-bar burger-lines"></span>
+            <span class="navbar-toggler-bar burger-lines"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <ul class="nav navbar-nav mr-auto">
+              <li class="nav-item">
+                <a href="#" class="nav-link" data-toggle="dropdown">
+                  <i class="nc-icon nc-palette"></i>
+                  <span class="d-lg-none">Dashboard</span>
+                </a>
+              </li>
+              {% block dashboard %}
+              {% endblock dashboard %}
+            </ul>
+            {% block board %}
+            {% endblock board %}
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+
+      {% block main %}
+      <div class="content">
+        <div class="animated fadeIn">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="col-md-12 prueba">
+                <div class="card bg-primary">
+                  <div class="card-body">
+                    <blockquote class="blockquote mb-0 text-light text-center">
+                      <h1 class="text-light">BIENVENIDO A STUDENTR</h1>
+                      <footer class="blockquote-footer text-light">Un sistema de recomentación de docentes</footer>
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="container-fluid">
+          <nav>
+            <ul class="footer-menu">
+              <li>
+                <a href="#">
+                  Home
+                </a>
+              </li>
+            </ul>
+            <p class="copyright text-center">
+              ©
+              <script>
+                document.write(new Date().getFullYear())
+              </script>
+              <a href="{% url 'index' %}">StudentR</a>, Realizado por un estudiante de la Universidad del Valle
+            </p>
+          </nav>
+         </div>
+      </footer>
+    </div>
+  </div>
+  {% endblock main %}
+</body>
+
+{% block scripts %}
+<!--   Core JS Files   -->
+<script src="{% static '/js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static '/js/core/popper.min.js' %}"></script>
+<script src="{% static '/js/core/bootstrap.min.js' %}"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{% static '/js/plugins/bootstrap-switch.js' %}"></script>
+<!--  Chartist Plugin  -->
+<script src="{% static '/js/plugins/chartist.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static '/js/plugins/bootstrap-notify.js' %}"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static '/js/demo.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    // Javascript method's body can be found in assets/js/demos.js
+    demo.initDashboardPageCharts();
+
+    demo.showNotification();
+
+  });
+</script>
+{% endblock scripts %}
+
+</html>

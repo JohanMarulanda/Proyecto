@@ -1,0 +1,97 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block reabout %}
+{% url 'show' %}
+{% endblock reabout %}
+
+{% block about %}
+Añadir Comentario
+{% endblock about %}
+
+<!-- SECCION PARA BUSCAR UNA ASIGNATURA -->
+{% block resingup %}
+{% url 'formularioBusqueda' %}
+{% endblock resingup%}
+
+{% block singup %}
+Buscar Recomendacion
+{% endblock singup %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block singin %}
+Realizar Pregunta
+{% endblock singin %}
+
+{% block board %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="#pablo">
+            <span class="no-icon">Account</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">
+            <span class="no-icon">Log out</span>
+        </a>
+    </li>
+</ul>
+{% endblock board %}
+
+<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
+{% block añadirMenu %}
+<li>
+    <a class="nav-link" href="#">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Responder Preguntas<output></output></p>
+    </a>
+</li>
+{% endblock añadirMenu %}
+
+{% block main %}
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-md-12 prueba">
+                    <div class="card bg-primary">
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0 text-light text-center">
+                                <h1 class="text-light">{{ user.username | upper }} BIENVENIDO A STUDENTR</h1>
+                                <footer class="blockquote-footer text-light">Un sistema de recomentación de docentes
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <nav>
+            <ul class="footer-menu">
+                <li>
+                    <a href="#">
+                        Home
+                    </a>
+                </li>
+            </ul>
+            <p class="copyright text-center">
+                ©
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>
+                <a href="{% url 'index' %}">StudentR</a>, Realizado por un estudiante de la Universidad del Valle
+            </p>
+        </nav>
+    </div>
+</footer>
+</div>
+</div>
+{% endblock main %}

@@ -1,0 +1,457 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+{% block css %}
+<meta charset="utf-8" />
+<link rel="apple-touch-icon" sizes="76x76" href="{% static '/img/apple-icon.png' %}">
+<link rel="icon" type="image/png" href="{% static '/img/favicon.ico' %}">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>StudentR - Un sistema recomendador de cursos</title>
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+    name='viewport' />
+<!--     Fonts and icons     -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+<!-- CSS Files -->
+<link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet" />
+<link href="{% static '/css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
+<!-- CSS Just for demo purpose, don't include it in your project -->
+<link href="{% static '/css/demo.css' %}" rel="stylesheet" />
+<link href="{% static '/css/lumino.min.css' %}" rel="stylesheet">
+{% endblock css %}
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block reabout %}
+{% url 'show' %}
+{% endblock reabout %}
+
+{% block about %}
+Añadir Comentario
+{% endblock about %}
+
+<!-- SECCION PARA BUSCAR UNA ASIGNATURA -->
+{% block resingup %}
+{% url 'formularioBusqueda' %}
+{% endblock resingup%}
+
+{% block singup %}
+Buscar Recomendacion
+{% endblock singup %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block singin %}
+Realizar Pregunta
+{% endblock singin %}
+
+
+<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
+{% block añadirMenu %}
+<li>
+    <a class="nav-link" href="#">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Responder Preguntas<output></output></p>
+    </a>
+</li>
+
+{% endblock añadirMenu %}
+
+{% block board %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="#pablo">
+            <span class="no-icon">Account</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">
+            <span class="no-icon">Log out</span>
+        </a>
+    </li>
+</ul>
+{% endblock board %}
+
+{% block main %}
+<div class="col-md-8">
+    <div class="card">
+        <div class="card-header ">
+            <h4 class="card-title">Formulario busqueda docente:</h4>
+            <p class="card-category">
+                Por favor, seleccione la asignatura para la que está buscando una recomendación y responda el siguiente
+                formulario.
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li>
+                        <div class="alert alert-success">{{ message }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <form id="formulario" method="POST" class="post-form" enctype="multipart/form-data" action="{% url 'matrizConfusion' %}">
+                {% csrf_token %}
+
+                <br>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="oficioActual">Asignatura: </label>
+                    </div>
+                    <div class="campos">
+                        <select id="dropdown" name="asignatura_escogida" class="dropdown" required>
+                            <option value=""></option>
+                            {% for asignatura in asignaturas %}
+                            <option value="{{asignatura.nombre}}">
+                                {{asignatura.nombre}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras tú que el curso sea
+                            bien
+                            planificado, planeado y aceptado?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta1" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta1" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta1" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta1" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta1" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">Como estudiante, ¿El acompañamiento del docente es
+                            vital
+                            para tu aprendizaje o consideras que no es necesario y solo con una guía básica de la
+                            signatura
+                            puedes adquirir los conocimientos necesarios?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta2" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta2" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta2" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta2" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta2" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que el curso esté
+                            actualizado?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta3" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta3" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta3" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta3" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta3" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">¿Es importante para tí que la metodología empleada
+                            por
+                            el
+                            docente ayude a la reflexión y apropiación de conocimientos?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta4" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta4" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta4" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta4" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta4" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que los temas
+                            explicados
+                            por
+                            el docente concuerden con lo pactado al inicio del curso?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta5" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta5" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta5" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta5" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta5" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que el docente ponga
+                            de
+                            su
+                            tiempo para consultas y asesorías?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta6" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta6" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta6" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta6" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta6" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante es que los tiempos dados para
+                            las
+                            evaluaciones concuerdan con el grado de dificultad de las mismas?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta7" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta7" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta7" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta7" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta7" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="filas">
+                    <div class="etiquetas">
+                        <label id="number-label" for="radio-buttons">¿Consideras el trato del docente con sus
+                            estudiantes un
+                            factor
+                            importante para el buen desempeño en el curso?</label>
+                    </div>
+
+                    <div class="campos">
+                        <ul style="list-style: none;">
+                            <li class="radio">
+                                <label>Sin importancia
+                                    <input name="pregunta8" value="1" type="radio" class="userRatings" required />
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Poco importante
+                                    <input name="pregunta8" value="2" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Irrelevante
+                                    <input name="pregunta8" value="3" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Importante
+                                    <input name="pregunta8" value="4" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                            <li class="radio">
+                                <label>Muy importante
+                                    <input name="pregunta8" value="5" type="radio" class="userRatings">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+
+        <div class="card-footer">
+            <label class="col-sm-1 col-form-label"></label>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-md btn-success">Enviar</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+</div>
+
+{% endblock main %}
+
+{% block scripts %}
+<!--   Core JS Files   -->
+<script src="{% static '/js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static '/js/core/popper.min.js' %}"></script>
+<script src="{% static '/js/core/bootstrap.min.js' %}"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{% static '/js/plugins/bootstrap-switch.js' %}"></script>
+<!--  Chartist Plugin  -->
+<script src="{% static '/js/plugins/chartist.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static '/js/plugins/bootstrap-notify.js' %}"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static '/js/demo.js' %}"></script>
+{% endblock scripts %}
