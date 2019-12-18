@@ -19,7 +19,7 @@ from apps.asignatura.views import Home
 from apps.asignatura.views import show
 from apps.asignatura.views import principalUser
 from django.contrib.auth.decorators import login_required
-from apps.usuario.views import Login,logoutUsuario, Inicio, RegistroUsuario
+from apps.usuario.views import Login, logoutUsuario, Inicio, RegistroUsuario, edit_profile
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 #from django.conf import settings
 
@@ -37,6 +37,7 @@ urlpatterns = [
     path('reset/password_reset_done', PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name = 'password_reset_done'),
     re_path(r'^reset/(?P<uidb64>[0-9A-za-z_\-]+)/(?P<token>.+)/$', PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name = 'password_reset_confirm'),
     path('reset/done',PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html') , name = 'password_reset_complete'),
+    path('edit_profile/', edit_profile, name = 'edit_profile')
 ]
 
 #if settings.DEBUG:

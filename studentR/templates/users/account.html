@@ -18,8 +18,8 @@
 <!-- CSS Just for demo purpose, don't include it in your project -->
 <link href="{% static '/css/demo.css' %}" rel="stylesheet" />
 <link href="{% static '/css/lumino.min.css' %}" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 {% endblock css %}
+
 <!-- SECCION PARA AÑADIR COMENTARIO -->
 {% block reabout %}
 {% url 'show' %}
@@ -44,17 +44,6 @@ Buscar Recomendacion
 Realizar Pregunta
 {% endblock singin %}
 
-
-<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
-{% block añadirMenu %}
-<li>
-    <a class="nav-link" href="#">
-        <i class="nc-icon nc-chart-pie-35"></i>
-        <p>Responder Preguntas<output></output></p>
-    </a>
-</li>
-{% endblock añadirMenu %}
-
 {% block board %}
 <ul class="navbar-nav ml-auto">
     <li class="nav-item">
@@ -70,87 +59,51 @@ Realizar Pregunta
 </ul>
 {% endblock board %}
 
+<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
+{% block añadirMenu %}
+<li>
+    <a class="nav-link" href="#">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Responder Preguntas<output></output></p>
+    </a>
+</li>
+{% endblock añadirMenu %}
+
 {% block main %}
-<div class="container" id="primero" style="padding-top: 5%">
-    <h2>Docentes</h2>
-    <p>Escribe para buscar por nombre o apellido del docente</p>
-
-    <div class="container">
+<div class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 search">
-                <form method="get">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-12">
-                            <input type="text" class="form-control" placeholder="Buscar...." name="buscar" id=myInput
-                                value="{{ request.GET.buscar }}"">
-                                <span class=" input-group-list">
-                            <i class="icon icon-search">
-                                <button type="submit" class="btn btn-md btn-success">Buscar</button>
-                            </i>
-                            </span>
-                        </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Profile</h4>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <table id="datatable" class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Docente</th>
-                <th>Asignatura</th>
-                <th>Periodo</th>
-                <th>Grupo</th>
-                <th>Agregar Comentario</th>
-            </tr>
-        </thead>
-        <tbody id="myTable">
-            {% for asignatura in asignaturas %}
-            <tr>
-                <td>{{ asignatura.docente }}</td>
-                <td>{{ asignatura.nombre }}</td>
-                <td>{{ asignatura.periodo}}</td>
-                <td>{{ asignatura.grupo}}</td>
-                <td>
-                    <div class="contenedor">
-                        <a class="btn btn-md btn-warning" href="{% url 'edit' asignatura.id %}" 
-                        id="btn-abrir-popup">Añadir comentario</a>
+                    <div class="card-body">
+                        <form method="POST" class="post-form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ perfil_form.as_p }}
+                            <input type="submit" name="btn btn-md btn-success" value="Actualizar Perfil">
+                        </form>
                     </div>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="form-group row">
-        <label class="col-sm-1 col-form-label"></label>
-        <div class="col-sm-4">
-
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                <div class="col-md-6 col-sm-6 col-lg-6 col-xs-6 float-left">
-                    {% if asignaturas.has_previous %}
-                    <div class="clearfix">
-                        <a href="?page={{ asignaturas.previous_page_number }}{% if request.GET.search %} &q={{ request.GET.search }}{% endif %}"
-                            class="btn btn-md btn-info">Anterior</a>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                <div class="col-md-6 col-sm-6 col-lg-6 col-xs-6 float-right">
-                    {% if asignaturas.has_next %}
-                    <div class="clearfix">
-                        <a href="?page={{ asignaturas.next_page_number }}{% if request.GET.search %} &q={{ request.GET.search }}{% endif %}"
-                            class="btn btn-md btn-info">Siguiente</a>
+            <div class="col-md-4">
+                <div class="card card-user">
+                    <div class="card-image">
+                        <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400"
+                            alt="...">
                     </div>
-                    {% endif %}
+                    <div class="card-body">
+                        <div class="author">
+                            <a href="#">
+                                <img class="avatar border-gray" src="{% static '/img/default-avatar.png' %}" alt="...">
+                                <h5 class="title">{{ user.first_name }} {{ user.last_name }}</h5>
+                            </a>
+                            <p class="description">
+                                {{ user.username }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,6 +130,8 @@ Realizar Pregunta
         </nav>
     </div>
 </footer>
+</div>
+</div>
 {% endblock main %}
 
 {% block scripts %}
@@ -184,7 +139,6 @@ Realizar Pregunta
 <script src="{% static '/js/core/jquery.3.2.1.min.js' %}"></script>
 <script src="{% static '/js/core/popper.min.js' %}"></script>
 <script src="{% static '/js/core/bootstrap.min.js' %}"></script>
-<script src="{% static '/js/popup.js' %}"></script>
 <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
 <script src="{% static '/js/plugins/bootstrap-switch.js' %}"></script>
 <!--  Chartist Plugin  -->
@@ -195,5 +149,4 @@ Realizar Pregunta
 <script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
 <!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
 <script src="{% static '/js/demo.js' %}"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 {% endblock scripts %}
