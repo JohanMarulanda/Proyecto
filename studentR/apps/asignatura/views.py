@@ -63,9 +63,9 @@ def show(request):
             Q(docente__icontains=queryset)
         )
 
-    paginator = Paginator(asignatura, 10)
-    page = request.GET.get('page')
-    asignatura = paginator.get_page(page)
+    #paginator = Paginator(asignatura, 10)
+    #page = request.GET.get('page')
+    #asignatura = paginator.get_page(page)
     return render(request, "asignatura/buscarDocente.html", {'asignaturas': asignatura})
 
 # FUNCIÓN ENCARGADA DE AÑADIR UN COMENTARIO
