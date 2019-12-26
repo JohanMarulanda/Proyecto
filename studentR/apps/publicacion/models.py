@@ -3,12 +3,14 @@ from django.db import models
 # Create your models here.
 
 class Pregunta(models.Model):
-    id_user = models.IntegerField(primary_key=True)
-    pregunta = models.TextField(max_length=500, default='')
-    descripcion = models.TextField(max_length=1000, default='')
-    carrera = models.CharField(max_length=500, default='')
-    asignatura = models.CharField(max_length=500, default='')
+    id = models.AutoField(primary_key=True)
+    id_user = models.IntegerField()
+    pregunta = models.CharField(max_length=500)
+    descripcion = models.TextField()
+    carrera = models.CharField(max_length=500)
+    asignatura = models.CharField(max_length=500)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         # Django usa esto cuando necesita convertir objecs a string
-        return self.id_user
+        return self.id

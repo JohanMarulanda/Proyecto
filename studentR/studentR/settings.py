@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.asignatura',
     'apps.usuario',
     'apps.publicacion',
+    'crispy_forms',
     'bootstrap4',
     'widget_tweaks',
 ]

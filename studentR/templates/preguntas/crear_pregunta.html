@@ -1,0 +1,214 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block reabout %}
+{% url 'show' %}
+{% endblock reabout %}
+
+{% block about %}
+Añadir Comentario
+{% endblock about %}
+
+<!-- SECCION PARA BUSCAR UNA ASIGNATURA -->
+{% block resingup %}
+{% url 'formularioBusqueda' %}
+{% endblock resingup%}
+
+{% block singup %}
+Buscar Recomendacion
+{% endblock singup %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block resingin %}
+{% url 'crear_publicacion' %}
+{% endblock resingin %}
+
+{% block singin %}
+Realizar Pregunta
+{% endblock singin %}
+
+{% block board %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'edit_profile' %}">
+            <span class="no-icon">Account</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">
+            <span class="no-icon">Log out</span>
+        </a>
+    </li>
+</ul>
+{% endblock board %}
+
+<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
+{% block añadirMenu %}
+<li>
+    <a class="nav-link" href="#">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Responder Preguntas<output></output></p>
+    </a>
+</li>
+{% endblock añadirMenu %}
+
+{% block main %}
+<div class="col-md-8">
+    <form id="formulario" method="POST" class="post-form" enctype="multipart/form-data"
+        action="{% url 'crear_publicacion' %}">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header ">
+                <h4 class="card-title">Realizar Pregunta</h4>
+                <p class="card-category">Por favor, escriba lo más entendible posible.</p>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <input type="hidden" id="id_user" name="id_user" value="{{ user.id }}" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Carrera:</label>
+                    <div class="col-sm-4">
+                        <select class="seleccion" id="carrera" name="carrera" onchange="cargarAsignaturas()" required>
+                            <option value="">Seleccione una Carrera...</option>
+                            <option value="Adm. de Empresas">Adm. de Empresas</option>
+                            <option value="Contaduría Pública">Contaduría Pública</option>
+                            <option value="Trabajo Social">Trabajo Social</option>
+                            <option value="Ing. de Sistemas">Ing. de Sistemas</option>
+                            <option value="Tec. de Sistemas">Tec. de Sistemas</option>
+                            <option value="Tec. en Alimentos">Tec. en Alimentos</option>
+                            <option value="Tec. en Electrónica">Tec. en Electrónica</option>
+                            <option value="Ing. en Alimentos">Ing. en Alimentos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Asignatura:</label>
+                    <div class="col-sm-4">
+                        <select class="seleccion" id="asignatura" name="asignatura" required>
+                            <option value="">Seleccione una Asignatura</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Tu pregunta:</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="text" id="pregunta" name="pregunta" required value="{{ pregunta.pregunta }}"
+                            placeholder="Título de la pregunta">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Comentario:</label>
+                    <div class="col-sm-4">
+                        <textarea id="descripcion" name="descripcion" rows="10" cols="70" required value="{{ pregunta.descripcion }}"
+                            placeholder="Describe aquí tu pregunta..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <label class="col-sm-1 col-form-label"></label>
+                <div class="col-sm-4">
+                    <button type="submit" class="btn btn-md btn-success">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock main %}
+
+{% block scripts %}
+<!--   Core JS Files   -->
+<script src="{% static '/js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static '/js/core/popper.min.js' %}"></script>
+<script src="{% static '/js/core/bootstrap.min.js' %}"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{% static '/js/plugins/bootstrap-switch.js' %}"></script>
+<!--  Chartist Plugin  -->
+<script src="{% static '/js/plugins/chartist.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static '/js/plugins/bootstrap-notify.js' %}"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static '/js/demo.js' %}"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript">
+    var options = {
+        'Adm. de Empresas': ["", "Ciencias Humanas I", "Comprensión y Producción de Textos", "Fundamentos Organizacionales y Administración", "Matemática I",
+            "Business English I", "Constitución Política de Colombia", "Matemática II", "Ciencias humanas II", "Teorías de la Organización y Gestión I", "Contabilidad General"
+            , "Doctrinas Políticas", "Business English II", "Teorías de la Organización y Gestión II", "Liderazgo Empresarial", "Estadística I", "Contabilidad de Costos y Presupuestos"
+            , "Microeconomía", "Business English III", "Sociología de las Organizaciones", "Estadística II", "Entorno Organizacional", "Legislación Empresarial", "Macroeconomía"
+            , "Matemática Financiera para Administración", "Diseño y Evaluación Organizacional", "Estrategia y Planeación", "Legislación Laboral", "Fundamentos de Mercadeo"
+            , "Investigación de Operaciones", "Creatividad e Innovación Empresarial", "Políticas Económicas Nacional e Internacional", "Programación e Internet", "Gestión del Talento Humano"
+            , "Creación de Nuevos Productos", "Investigación de Mercados", "Gestión de la Producción de Bienes y Servicios", "Análisis de Sistemas de Información y Base de Datos", "Gestión Financiera y Presupuestos"
+            , "Negocios Internacionales", "Trabajo en Equipo", "Creación de Empresas", "Gerencia en Ventas", "Procesos de Fabricación de Bienes y Servicios", "Evaluación Financiera de Proyectos para Administración"
+            , "Comercio Exterior", "Toma de Decisiones y Negociación", "Administración para el Cambio", "Gerencia de la Calidad", "Gestión de los Sistemas de Información"
+            , "Gestión de Proyectos"],
+        'Contaduría Pública': ["", "Fundamentos de Contabilidad Financiera", "Introducción a la Contaduría Pública", "Matemática Básica", "Informática", "Introducción a la Economía"
+            , "Introducción al Derecho y Constitución Política", "Métodos de Estudio y Composición Escrita", "Cálculo", "Contabilidad de los Recursos de Inversión", "Contabilidad de la Financiación"
+            , "Lectura de Textos Contables en Inglés I", "Deporte Formativo", "Microeconomía", "Legislación Comercial I", "Casos Contables Especiales I", "Estadistica Descriptiva"
+            , "Lectura de Textos Contables en Inglés II", "Legislación Comercial II", "Introducción a las Ciencias Humanas", "Casos Contables Especiales II", "Inferencia Estadística"
+            , "Lectura de Textos Contables en Inglés III", "Macroeconomía", "Legislación Laboral", "Seminario de Epistemología de las Ciencias", "Sistemas de Producción"
+            , "Seminario de Teoría Contable", "Legislación Tributaria I", "Fundamentos de Costos", "Matemáticas Financieras", "Legislación Tributaria II", "Fundamentos de Control y Auditoría"
+            , "Procesos de Costos I", "Teorías de la Organización", "Control y Auditoría", "Procesos de Costos II", "Software y Procesos Contables", "Análisis de Costos y Presupuestos"
+            , "Proceso Administrativo Empresarial", "Control de Gestión", "Dirección y Organización Contable", "Administración Financiera", "Laboratorio Contable Financiero Sistematizado", "Contabilidad Pública"
+            , "Resolución de Problemas y Toma de Decisiones", "Etica Moral y Fe Pública", "Metodología de Investigación Contable", "Revisoría Fiscal"
+            , "Evaluación Financiera de Proyectos"],
+        'Trabajo Social': ["-"],
+        'Ing. de Sistemas': ["", "Introducción a la Tecnología Informática", "Fundamentos de Programación", "Cálculo I", "Introducción a la Ingeniería de Sístemas", "Lectura de Textos Académicos en Inglés I"
+            , "Introducción a la Programación Orientada a Objetos", "Matemáticas Discretas I", "Cálculo II", "Álgebra Lineal", "Lectura de Textos Académicos en Inglés II", "Programación Interactiva"
+            , "Matemáticas Discretas II", "Calculo III", "Física I", "Lectura de Textos Académicos en Inglés III", "Arquitectura de Computadores I", "Fundamentos de Lenguaje de Programación", "Ecuaciones Diferenciales"
+            , "Física II", "Experimentación Física I", "Lectura de Textos Académicos en Inglés IV", "Sistemas Operativos", "Arquitectura de Computadores II", "Análisis y Métodos Numéricos"
+            , "Fundamentos de Análisis y Diseño de Algoritmos", "Experimentación Física II", "Desarrollo de Software I", "Fundamentos de Redes", "Probabilidad y Estadística"
+            , "Base de Datos I", "Introducción a la Gestión Ambiental", "Computación Gráfica", "Simulación Computacional", "Inteligencia Artificial", "Desarrollo de Software II"
+            , "Teoría General de Sistemas", "Aplicaciones en la Web y Redes Inalámbricas", "Seminario de Trabajo de Grado", "Evaluación y Administración de Proyectos", "Sistemas de Información"
+            , "Fundamentos de Gestión Tecnológica", "Trabajo de Grado I", "Complejidad y Optimización", "Análisis Económico de Inversiones"],
+        'Tec. de Sistemas': ["", "Cálculo I", "Fundamentos de Programación", "Introducción a las Tecnologías Informáticas", "Introducción a la Tecnología en Sistemas de Información", "Comprensión y Producción de Textos Académicos"
+            , "Lectura de Textos Académicos en Inglés I", "Cálculo II", "Introducción a la Programación Orientada a Objetos", "Arquitectura de Computadores I", "Constitución Política de Colombia"
+            , "Lectura de Textos Académicos en Inglés II", "Álgebra Lineal", "Matemáticas Discretas I", "Programación Interactiva", "Arquitectura de Computadores II"
+            , "Sistemas Operativos", "Matemáticas Discretas II", "Base de Datos I", "Desarrollo de Software I", "Fundamentos de Redes", "Deporte Formativo", "Teoría General de Sistemas"
+            , "Fundamentos de Análisis y Diseño de Algoritmos", "Diseño de Interfaces de Usuario", "Desarrollo de Software II", "Impacto Ambiental de la Tecnología"
+            , "Organización, Administración de Empresas", "Sistemas de Información", "Aplicaciones en la Web y Redes Inalámbricas"],
+        'Tec. en Alimentos': ["", "Cálculo I", "Química General", "Laboratorio de Química General", "Biología Tecnológica", "Laboratorio de Biología Tecnológica"
+            , "Introducción a la Tecnología en Alimentos", "Introducción a la Tecnología Informática", "Cálculo II", "Principios de Química Orgánica General"
+            , "Física General I", "Microbiológia de Alimentos", "Comprensión y Producción de Textos Académicos", "Deporte Formativo", "Elementos de Procesos en la Industria de Alimentos"
+            , "Química de Alimentos", "Física General II", "Aseguramiento de la Calidad en la Industria de los Alimentos", "Constitución Política de Colombia"
+            , "Lectura de Textos Académicos en Inglés I", "Manejo de Sólidos y Fluídos", "Toxicología de Alimentos", "Fundamentos de Nutrición Humana y Animal", "Transferencia de Calor"
+            , "Impacto Ambiental de la Tecnología", "Lectura de Textos Académicos en Inglés II", "Tecnología de Cereales y Oleaginosas", "Tratamientos Térmicos"
+            , "Tecnología de Leche y Productos Lácteos", "Iniciación de Nuevas Empresas", "Práctica Tecnológica", "Tecnología de Frutas y Verduras"
+            , "Tecnología de Carnes y Productos Cárnicos"],
+        'Tec. en Electrónica': ["", "Deporte formativo", "Lectura de Textos Académicos en Inglés I", "Introducción a la Tecnología en Electrónica", "Introducción a la Tecnología Informática"
+            , "Comprensión y Producción de Textos", "Calculo I", "Lectura de Textos Académicos en Inglés II", "Electricidad para Electrónica"
+            , "El Medio Ambiente y la Constitución", "Introducción a la Gestión Ambiental", "Calculo II", "Física", "Electrónica Básica", "Algoritmia y Programación"
+            , "Técnicas Digitales", "Matemáticas Especiales para Tecnología en Electrónica", "Fuentes y Amplificadores", "Circuitos Integrados", "Microprocesadores I"
+            , "Sistemas Electrómecanicos", "Sistemas Automáticos de Control", "Sistemas de Comunicación", "Microprocesadores II", "Mediciones Electrónicas", "Técnicas de Mantenimiento"
+            , "Emprendimiento Empresarial", "Instrumentación Electrónica Básica"],
+        'Ing. en Alimentos': ["-"]
+    }
+
+    $(function () {
+        var fillAsignatura = function () {
+            var selected = $('#carrera').val();
+            $('#asignatura').empty();
+            options[selected].forEach(function (element, index) {
+                $('#asignatura').append('<option value="' + element + '">' + element + '</option>');
+            });
+        }
+        $('#carrera').change(fillAsignatura);
+        fillAsignatura();
+    });
+
+</script>
+{% endblock scripts %}
