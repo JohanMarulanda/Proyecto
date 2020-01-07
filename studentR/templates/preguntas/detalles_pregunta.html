@@ -1,0 +1,84 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block reabout %}
+{% url 'show' %}
+{% endblock reabout %}
+
+{% block about %}
+Añadir Comentario
+{% endblock about %}
+
+<!-- SECCION PARA BUSCAR UNA ASIGNATURA -->
+{% block resingup %}
+{% url 'formularioBusqueda' %}
+{% endblock resingup%}
+
+{% block singup %}
+Buscar Recomendacion
+{% endblock singup %}
+
+
+<!-- SECCION PARA AÑADIR COMENTARIO -->
+{% block resingin %}
+{% url 'crear_publicacion' %}
+{% endblock resingin %}
+
+{% block singin %}
+Realizar Pregunta
+{% endblock singin %}
+
+{% block board %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'edit_profile' %}">
+            <span class="no-icon">Account</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">
+            <span class="no-icon">Log out</span>
+        </a>
+    </li>
+</ul>
+{% endblock board %}
+
+<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
+{% block añadirMenu %}
+<li>
+    <a class="nav-link" href="#">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Responder Preguntas<output></output></p>
+    </a>
+</li>
+
+<li>
+    <a class="nav-link" href="{% url 'listar_publicacion' user.id %}">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Mis Preguntas<output></output></p>
+    </a>
+</li>
+{% endblock añadirMenu %}
+
+{% block main %}
+<div class="post">
+    <h2>{{ preg.pregunta }}</h2>
+    <p>{{ preg.descripcion|linebreaksbr }}</p>
+</div>
+
+<hr>
+<a class="btn btn-default" href="{% url 'add_comment_to_question' preg.id %}">Add comment</a>
+
+{% for comment in preg.comments.all %}
+<div class="comment">
+    <div class="date">{{ comment.created_date }}</div>
+    <strong>{{ comment.author }}</strong>
+    <p>{{ comment.text|linebreaks }}</p>
+</div>
+{% empty %}
+<p>No comments here yet :(</p>
+{% endfor %}
+
+{% endblock main %}

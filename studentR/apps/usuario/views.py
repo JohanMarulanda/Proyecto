@@ -12,7 +12,6 @@ from django.views.generic import TemplateView, CreateView
 from apps.usuario.forms import RegistroForm
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 
