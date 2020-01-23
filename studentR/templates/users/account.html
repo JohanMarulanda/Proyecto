@@ -66,14 +66,14 @@ Realizar Pregunta
 <!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
 {% block añadirMenu %}
 <li>
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{% url 'responder_preguntas' user.id %}">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Responder Preguntas<output></output></p>
     </a>
 </li>
 
 <li>
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{% url 'listar_publicacion' user.id %}">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Mis Preguntas<output></output></p>
     </a>

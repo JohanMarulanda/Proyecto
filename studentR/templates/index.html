@@ -40,7 +40,7 @@
             </a>
           </li>
           <li>
-            <a class="nav-link" href="{% block resingup %} #portfolio {% endblock resingup %}">
+            <a class="nav-link" href="{% block resingup %} {% url 'register' %} {% endblock resingup %}">
               <i class="nc-icon nc-chart-pie-35"></i>
               <p>{% block singup %} Sign up {% endblock singup %}</p>
             </a>

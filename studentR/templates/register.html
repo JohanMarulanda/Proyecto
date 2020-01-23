@@ -11,19 +11,19 @@
                         <h4 class="card-title">Create Profile</h4>
                     </div>
                     <div class="card-body">
-                        <form method="POST">
+                        <form method="POST" name="f1">
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-5 pr-1">
                                     <div class="form-group">
                                         <label>Nombre</label>
-                                        <input class="form-control" type="text" name="first_name">
+                                        <input class="form-control" type="text" name="first_name" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 pr-1">
                                     <div class="form-group">
                                         <label>Apellidos</label>
-                                        <input class="form-control" type="text" name="last_name">
+                                        <input class="form-control" type="text" name="last_name" required>
                                     </div>
                                 </div>
                             </div>
@@ -31,13 +31,13 @@
                                 <div class="col-md-6 pr-1">
                                     <div class="form-group">
                                         <label>Correo</label>
-                                        <input class="form-control" type="text" name="email">
+                                        <input class="form-control" type="text" name="email" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pl-1">
                                     <div class="form-group">
                                         <label>Nombre de usuario</label>
-                                        <input class="form-control" type="text" name="username">
+                                        <input class="form-control" type="text" name="username" required>
                                     </div>
                                 </div>
                             </div>
@@ -45,18 +45,18 @@
                                 <div class="col-md-6 pl-1">
                                     <div class="form-group">
                                         <label>Contraseña</label>
-                                        <input class="form-control" type="password" name="password1">
+                                        <input class="form-control" type="password" name="password1" pattern=".{8,}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6 pl-1">
                                     <div class="form-group">
                                         <label>Confirmar contraseña</label>
-                                        <input class="form-control" type="password" name="password2">
+                                        <input class="form-control" type="password" name="password2" pattern=".{8,}" required>
                                     </div>
                                 </div>
                             </div>
                             
-                            <button type="submit" class="btn btn-info btn-fill pull-right">Registrar</button>
+                            <button type="submit" class="btn btn-info btn-fill pull-right" >Registrar</button>
                             <div class="clearfix"></div>
                         </form>
                     </div>
@@ -67,3 +67,4 @@
     </div>
 </div>
 {% endblock main %}
+

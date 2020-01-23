@@ -35,7 +35,7 @@ Añadir Comentario
 {% endblock resingup%}
 
 {% block singup %}
-Buscar Recomendacion
+Buscar Recomendación
 {% endblock singup %}
 
 
@@ -52,14 +52,14 @@ Realizar Pregunta
 <!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
 {% block añadirMenu %}
 <li>
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{% url 'responder_preguntas' user.id %}">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Responder Preguntas<output></output></p>
     </a>
 </li>
 
 <li>
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{% url 'listar_publicacion' user.id %}">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Mis Preguntas<output></output></p>
     </a>
@@ -126,9 +126,8 @@ Realizar Pregunta
 
                 <div class="filas">
                     <div class="etiquetas">
-                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras tú que el curso sea
-                            bien
-                            planificado, planeado y aceptado?</label>
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que el curso esté
+                            bien planificado?</label>
                     </div>
 
                     <div class="campos">
@@ -164,11 +163,8 @@ Realizar Pregunta
 
                 <div class="filas">
                     <div class="etiquetas">
-                        <label id="number-label" for="radio-buttons">Como estudiante, ¿El acompañamiento del docente es
-                            vital
-                            para tu aprendizaje o consideras que no es necesario y solo con una guía básica de la
-                            signatura
-                            puedes adquirir los conocimientos necesarios?</label>
+                        <label id="number-label" for="radio-buttons">Como estudiante, ¿Qué tan importante es el rol que juega
+                            el acompañamiento del docente durante tu proceso de aprendizaje?</label>
                     </div>
 
                     <div class="campos">
@@ -319,7 +315,7 @@ Realizar Pregunta
 
                 <div class="filas">
                     <div class="etiquetas">
-                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que el docente ponga
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que el docente disponga
                             de
                             su
                             tiempo para consultas y asesorías?</label>
@@ -360,7 +356,7 @@ Realizar Pregunta
                     <div class="etiquetas">
                         <label id="number-label" for="radio-buttons">¿Qué tan importante es que los tiempos dados para
                             las
-                            evaluaciones concuerdan con el grado de dificultad de las mismas?</label>
+                            evaluaciones concuerden con el grado de dificultad de las mismas?</label>
                     </div>
 
                     <div class="campos">
@@ -464,4 +460,23 @@ Realizar Pregunta
 <script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
 <!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
 <script src="{% static '/js/demo.js' %}"></script>
+<script type="text/javascript">
+    function listar_top(mensaje)
+    {
+        $.confirm({
+            title: false,
+            content: 'url:top_docentes.html',
+            onContentReady: function () {
+                // when content is fetched & rendered in DOM
+                alert('onContentReady');
+                var self = this;
+                this.buttons.ok.disable();
+                this.$content.find('.btn').click(function () {
+                    self.$content.find('input').val('Chuck norris');
+                    self.buttons.ok.enable();
+                });
+            }
+    }
+</script>
+
 {% endblock scripts %}

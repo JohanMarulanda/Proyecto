@@ -80,8 +80,6 @@ def edit(request, id):
 def añadirComentario(request, id):
     if request.method == 'POST':
         coment = request.POST.get('comentario')
-        print("EL COMENTARIO QUE RECIBO ES : ")
-        print(coment)
         asig_id = asignaturaProf.objects.get(id=id)
 
         authenticator = IAMAuthenticator(
@@ -112,17 +110,6 @@ def esActivo(nombreDocente):
 
 # Esta función recibe las listas con los resultados de los docentes y los nombres, y obtiene el nombre del docente
 # que se encuentra en la posición en que mayor número se obtuvo y además está activo en la bd
-
-
-def eliminaDatos(listaD, listaR):
-    listaD_nueva = []
-    listaR_nueva = []
-    for i in listaR:
-        if i not in listaR_nueva:
-            listaR_nueva.append(i)
-            listaD_nueva.append(listaD[listaR.index(i)])
-    return listaD_nueva, listaR_nueva
-
 def mayorActivo(listaD, listaR):
     maximo = max(listaR)
     for i in range(len(listaR)):
@@ -137,25 +124,25 @@ def mayorActivo(listaD, listaR):
 
 def recomendador(listaDocentes, listaRespuestas):
     maximo = max(listaRespuestas)
-    print("EL NUMERO MAXIMO DE LA LISTA ES : ")
-    print(maximo)
+    #print("EL NUMERO MAXIMO DE LA LISTA ES : ")
+    #print(maximo)
     if len(listaRespuestas) == 1:
         if esActivo(listaDocentes[0]):
-            print("PRIMER CASO, VOY A RETORNAR: ")
-            print(listaDocentes[0])
+            #print("PRIMER CASO, VOY A RETORNAR: ")
+            #print(listaDocentes[0])
             return listaDocentes[0]
         else:
-            print("SEGUNDO CASO, VOY A RETORNAR: ")
-            print("LO SENTIMOS, NO EXISTEN DATOS EN LA BASE")
+            #print("SEGUNDO CASO, VOY A RETORNAR: ")
+            #print("LO SENTIMOS, NO EXISTEN DATOS EN LA BASE")
             return "LO SENTIMOS, NO EXISTEN DATOS EN LA BASE DE DATOS PARA RECOMENDAR UN DOCENTE DE ESTA ASIGNATURA"
     elif listaRespuestas.count(maximo) > 1:
-        print("TERCER CASO, VOY A RETORNAR: ")
-        print(mayorActivo(listaDocentes, listaRespuestas))
+        #print("TERCER CASO, VOY A RETORNAR: ")
+        #print(mayorActivo(listaDocentes, listaRespuestas))
         return mayorActivo(listaDocentes,listaRespuestas)
     elif esActivo(listaDocentes[listaRespuestas.index(max(listaRespuestas))]):
         variable = listaDocentes[listaRespuestas.index(max(listaRespuestas))]
-        print("CUARTO CASO, VOY A RETORNAR: ")
-        print(variable)
+        #print("CUARTO CASO, VOY A RETORNAR: ")
+        #print(variable)
         return variable
     else:
         posicion = listaRespuestas.index(max(listaRespuestas))
@@ -186,9 +173,38 @@ def calculaSuma(lista):
     return resp
 
 
+#En esta función se aplica el tipo de ordenado burbuja, para 
+def bubbleSort(listaRespuestas, listaDocentes):
+    for recorrido in range(1,len(listaRespuestas)):
+        for posicion in range(len(listaRespuestas) - recorrido):
+            if listaRespuestas[posicion] < listaRespuestas[posicion + 1]:
+                temporalRespuesta = listaRespuestas[posicion]
+                temporalDocente = listaDocentes[posicion]
+
+                listaRespuestas[posicion] = listaRespuestas[posicion + 1]
+                listaRespuestas[posicion + 1] = temporalRespuesta
+
+                listaDocentes[posicion] = listaDocentes[posicion + 1]
+                listaDocentes[posicion + 1] = temporalDocente
+    return listaRespuestas,listaDocentes
+
+
+#Funcion que elimina los elementos repetidos en las listas de recomendación docente
+def eliminaIguales(listaRespuestas, listaDocentes):
+    newListaDocentes = []
+    newListaRespuestas = []
+    for i in listaDocentes:
+        if i not in newListaDocentes:
+            newListaDocentes.append(i)
+            newListaRespuestas.append(index(listaDocentes[i]))
+    return newListaRespuestas,newListaDocentes
+
+
 def matrizConfusion(request):
     if request.method == 'POST':
         asig = request.POST.get('asignatura_escogida')
+        print("LA ASIGNATURA ESCOGIDA ES :")
+        print(asig)
         q1 = float('0' + request.POST.get('pregunta1'))
         q2 = float('0' + request.POST.get('pregunta2'))
         q3 = float('0' + request.POST.get('pregunta3'))
@@ -199,7 +215,6 @@ def matrizConfusion(request):
         q8 = float('0' + request.POST.get('pregunta8'))
 
         cuestionario = [q1, q2, q3, q4, q5, q6, q7, q8]
-        print(asig)
         bd = asignaturaProf.objects.filter(nombre=asig)
         docente = []
         respuestas = []
@@ -244,8 +259,20 @@ def matrizConfusion(request):
         print("ESTA ES LA LISTA DE RESPUESTAS: ")
         print(respuestas)
         resultado = recomendador(docente, respuestas)
-        print("ESTO ES LO QUE OBTENGO AL FINAL DE TODOOO: ")
-        print(resultado)
+        #print("ESTO ES LO QUE OBTENGO AL FINAL DE TODOOO: ")
+        #print(resultado)
+        r, d = bubbleSort(respuestas,docente)
+        print("")
+        print("ESTA SERIA MI LISTA DE RESPUESTAS ORDENADAS: ")
+        print(r)
+        print("Y ESTA MI LISTA DE DOCENTES ORDENADOS: ")
+        print(d)
+        #print("LOS DATOS DESPUÉS DE LA ELIMINACIÓN DE IGUALES SON : ")
+        #re, do = eliminaIguales(r,d)
+        #print("ESTA ES LA LISTA DE DOCENTES TOP: ")
+        #print(do)
+        #print("ESTA ES LA LISTA DE RESPUESTAS TOP: ")
+        #print(re)
         messages.success(request, resultado)
 
         #return redirect('principalUser')

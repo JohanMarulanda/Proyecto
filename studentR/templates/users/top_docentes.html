@@ -1,0 +1,27 @@
+<table id="datatable" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Docente</th>
+            <th>Asignatura</th>
+            <th>Periodo</th>
+            <th>Grupo</th>
+            <th>Agregar Comentario</th>
+        </tr>
+    </thead>
+    <tbody id="myTable">
+        {% for asignatura in asignaturas %}
+        <tr>
+            <td>{{ asignatura.docente }}</td>
+            <td>{{ asignatura.nombre }}</td>
+            <td>{{ asignatura.periodo}}</td>
+            <td>{{ asignatura.grupo}}</td>
+            <td>
+                <div class="contenedor">
+                    <a class="btn btn-md btn-warning" href="{% url 'edit' asignatura.id %}" id="btn-abrir-popup">Añadir
+                        comentario</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

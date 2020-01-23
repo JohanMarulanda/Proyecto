@@ -53,14 +53,14 @@ Realizar Pregunta
 <!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
 {% block añadirMenu %}
 <li>
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{% url 'responder_preguntas' user.id %}">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Responder Preguntas<output></output></p>
     </a>
 </li>
 
 <li>
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{% url 'listar_publicacion' user.id %}">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Mis Preguntas<output></output></p>
     </a>
@@ -88,8 +88,8 @@ Realizar Pregunta
         {% csrf_token %}
         <div class="card">
             <div class="card-header ">
-                <h4 class="card-title">Añadar comentario</h4>
-                <p class="card-category">Por favor, escriba lo más entendible posible.</p>
+                <h4 class="card-title">Añadir comentario</h4>
+                <p class="card-category">Por favor, escriba lo más entendible posible. (Su comentario debe tener más de una palabra) </p>
             </div>
             <br>
             <div class="card-body">
