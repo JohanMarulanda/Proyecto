@@ -80,3 +80,19 @@ def edit_profile(request):
         # formulario inicial
         perfil_form = RegistroForm(instance=request.user)
     return render(request, 'users/account.html', {'perfil_form': perfil_form})
+
+
+#Funcion para editar el perfil de un usuario
+@login_required
+def edit_admin(request):
+    if request.method == 'POST':
+        # formulario enviado
+        perfil_form = RegistroForm(request.POST, instance=request.user)
+        if perfil_form.is_valid():
+            # formulario validado correctamente
+            perfil_form.save()
+            return redirect('principalUser')
+    else:
+        # formulario inicial
+        perfil_form = RegistroForm(instance=request.user)
+    return render(request, 'users/account_admin.html', {'perfil_form': perfil_form})

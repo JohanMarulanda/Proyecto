@@ -1,0 +1,117 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+{% block logo %}
+{% url 'administrador' %}
+{% endblock logo %}
+
+{% block navigation %}
+<ul class="nav">
+    <li>
+        <a class="nav-link" href="{% url 'grafica_recomendados' %}">
+            <i class="nc-icon nc-chart-pie-35"></i>
+            <p>Consultar Estadisticas</p>
+        </a>
+    </li>
+
+</ul>
+</div>
+</div>
+{% endblock navigation %}
+
+{% block board %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'edit_admin' %}">
+            <span class="no-icon">Account</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">
+            <span class="no-icon">Log out</span>
+        </a>
+    </li>
+</ul>
+{% endblock board %}
+
+{% block main %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" class="post-form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ perfil_form.as_p }}
+                            <input type="submit" name="btn btn-md btn-success" value="Actualizar Perfil">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-user">
+                    <div class="card-image">
+                        <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400"
+                            alt="...">
+                    </div>
+                    <div class="card-body">
+                        <div class="author">
+                            <a href="#">
+                                <img class="avatar border-gray" src="{% static '/img/default-avatar.png' %}" alt="...">
+                                <h5 class="title">{{ user.first_name }} {{ user.last_name }}</h5>
+                            </a>
+                            <p class="description">
+                                {{ user.username }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <nav>
+            <ul class="footer-menu">
+                <li>
+                    <a href="#">
+                        Home
+                    </a>
+                </li>
+            </ul>
+            <p class="copyright text-center">
+                ©
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>
+                <a href="{% url 'index' %}">StudentR</a>, Realizado por un estudiante de la Universidad del Valle
+            </p>
+        </nav>
+    </div>
+</footer>
+</div>
+</div>
+{% endblock main %}
+
+{% block scripts %}
+<!--   Core JS Files   -->
+<script src="{% static '/js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static '/js/core/popper.min.js' %}"></script>
+<script src="{% static '/js/core/bootstrap.min.js' %}"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{% static '/js/plugins/bootstrap-switch.js' %}"></script>
+<!--  Chartist Plugin  -->
+<script src="{% static '/js/plugins/chartist.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static '/js/plugins/bootstrap-notify.js' %}"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static '/js/demo.js' %}"></script>
+{% endblock scripts %}
