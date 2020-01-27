@@ -18,6 +18,9 @@
         <h1>Inicia Sesión</h1>
         {% csrf_token %}
         <div class="contenedor">
+            {% if form.errors %}
+                <p> Su nombre de usuario y la contraseña no coinciden. Por favor, inténtelo de nuevo. </p>
+            {% endif %}
             <div class="input-contenedor">
                 <i class="fas fa-envelope icon"></i>
                 <input type="text" placeholder="Nombre de usuario:" name="username">

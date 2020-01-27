@@ -7,12 +7,13 @@ from django.contrib import messages
 from django.db.models import Q
 # Create your views here.
 
-
+#Vista para acceder a todas las preguntas realizadas
 def formularioPreguntas(request):
     preguntas = Pregunta.objects.all()
     return render(request, 'preguntas/buscarPreguntas.html', {'preguntas': pregunta})
 
 
+#Vistas para crear una pregunta de una carrera específica, verifica si el form es válido y crea la pregunta de ser así
 def crear_publicacion(request):
     if not request.user.is_authenticated:
         raise Http404
@@ -28,12 +29,14 @@ def crear_publicacion(request):
     return render(request, 'preguntas/crear_pregunta.html', {'pregunta_form': pregunta_form})
 
 
+#Función para eliminar una publicación
 def eliminar_publicacion(request, id):
     preg = get_object_or_404(Pregunta, pk=id)
     preg.delete()
     return redirect('listar_publicacion')
     
 
+#Función para listar todas las publicaciones de un usuario
 def listar_publicacion(request, id):
     queryset_list = Pregunta.objects.filter(id_user=id, activo=True)
     if request.user.is_staff or request.user.is_superuser:
@@ -64,11 +67,13 @@ def listar_publicacion(request, id):
     return render(request, "preguntas/listar_preguntas.html", {'queryset_list': queryset_list})
 
 
+#Funcion para visualizar los detalles de una pregunta en específico (si es que existe)
 def detalles_pregunta(request, id):
     preg = get_object_or_404(Pregunta, pk=id)
     return render(request, 'preguntas/detalles_pregunta.html', {'preg': preg})
 
 
+#Funcion para añadir comentarios de una asignatura en específico
 def add_comment_to_question(request, id):
     preg = get_object_or_404(Pregunta, pk=id)
     if request.method == "POST":
@@ -84,8 +89,6 @@ def add_comment_to_question(request, id):
 
 
 def responder_preguntas(request, num):
-    print("EL NUMERO QUE TENGO EN CONSOLA ES : ")
-    print(num)
     queryset_list = Pregunta.objects.exclude(id_user=num)
 
     return render(request, "preguntas/responder_preguntas.html", {'queryset_list': queryset_list})

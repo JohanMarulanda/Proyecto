@@ -72,8 +72,18 @@ Realizar Pregunta
                 <h4 class="card-title">Realizar Pregunta</h4>
                 <p class="card-category">Por favor, escriba lo más entendible posible.</p>
             </div>
-
             <div class="card-body">
+                <div class="form-group">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li>
+                            <div class="alert alert-success">{{ message }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
                 <div class="form-group row">
                     <div class="col-sm-4">
                         <input type="hidden" id="id_user" name="id_user" value="{{ user.id }}" />
@@ -173,7 +183,6 @@ Realizar Pregunta
             , "Proceso Administrativo Empresarial", "Control de Gestión", "Dirección y Organización Contable", "Administración Financiera", "Laboratorio Contable Financiero Sistematizado", "Contabilidad Pública"
             , "Resolución de Problemas y Toma de Decisiones", "Etica Moral y Fe Pública", "Metodología de Investigación Contable", "Revisoría Fiscal"
             , "Evaluación Financiera de Proyectos"],
-        'Trabajo Social': ["-"],
         'Ing. de Sistemas': ["", "Introducción a la Tecnología Informática", "Fundamentos de Programación", "Cálculo I", "Introducción a la Ingeniería de Sístemas", "Lectura de Textos Académicos en Inglés I"
             , "Introducción a la Programación Orientada a Objetos", "Matemáticas Discretas I", "Cálculo II", "Álgebra Lineal", "Lectura de Textos Académicos en Inglés II", "Programación Interactiva"
             , "Matemáticas Discretas II", "Calculo III", "Física I", "Lectura de Textos Académicos en Inglés III", "Arquitectura de Computadores I", "Fundamentos de Lenguaje de Programación", "Ecuaciones Diferenciales"
@@ -202,7 +211,6 @@ Realizar Pregunta
             , "Técnicas Digitales", "Matemáticas Especiales para Tecnología en Electrónica", "Fuentes y Amplificadores", "Circuitos Integrados", "Microprocesadores I"
             , "Sistemas Electrómecanicos", "Sistemas Automáticos de Control", "Sistemas de Comunicación", "Microprocesadores II", "Mediciones Electrónicas", "Técnicas de Mantenimiento"
             , "Emprendimiento Empresarial", "Instrumentación Electrónica Básica"],
-        'Ing. en Alimentos': ["-"]
     }
 
     $(function () {

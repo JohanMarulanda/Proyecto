@@ -1,23 +1,21 @@
 from django.shortcuts import render, redirect
-from .forms import AsignaturaForm, ComentarioForm
-from .models import asignaturaProf, Comentario, activo
+from .forms import AsignaturaForm, ComentarioForm, RecomendacionForm
+from .models import asignaturaProf, Comentario, activo, Recomendacion
 from django.db.models import Q
-from django.core.paginator import Paginator
-#from textblob import TextBlob
 import time
 
+#Librerias necesarias para realizar el analisis de sentimiento de los comentarios
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions, EmotionOptions
 import json
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from django.contrib import messages
 
-import numpy as np
-from sklearn.metrics import confusion_matrix
-from scipy.stats import pearsonr
-from scipy.stats import spearmanr
 import math
-
+from django.views.generic.detail import DetailView
+from django.contrib.auth.decorators import login_required
+import random
+from django.http import HttpResponse
 # Create your views here.
 
 # ESTA FUNCIÓN MUESTRA LA PÁGINA PRINCIPAL
@@ -27,7 +25,6 @@ def Home(request):
     return render(request, 'index.html')
 
 # ESTA FUNCIÓN MUESTRA LA PÁGINA PRINCIPAL DE UN USUARIO LOGEADO
-
 
 def principalUser(request):
     return render(request, 'users/principalUser.html')
@@ -62,13 +59,9 @@ def show(request):
         asignatura = asignaturaProf.objects.filter(
             Q(docente__icontains=queryset)
         )
-
-    #paginator = Paginator(asignatura, 10)
-    #page = request.GET.get('page')
-    #asignatura = paginator.get_page(page)
     return render(request, "asignatura/buscarDocente.html", {'asignaturas': asignatura})
 
-# FUNCIÓN ENCARGADA DE AÑADIR UN COMENTARIO
+# FUNCIÓN RETORNA UN RENDER CUYO CONTEXTO ES SON LA BUSQUEDA DE DATOS DE ASIGNATURA DE UN DOCENTE ESPECÍFICO 
 
 
 def edit(request, id):
@@ -76,7 +69,7 @@ def edit(request, id):
     return render(request, 'asignatura/añadir_comentario.html', {'asignatura': asignatura})
 
 
-# FUNCIÓN QUE REALIZA EL COMENTARIO
+# FUNCIÓN QUE REALIZA EL COMENTARIO SOBRE UN DOCENTE, EXTRAE LA POLARIDAD DE ESE COMENTARIO Y LO ALMACENA JUNTO CON SU COMENTARIO
 def añadirComentario(request, id):
     if request.method == 'POST':
         coment = request.POST.get('comentario')
@@ -108,48 +101,6 @@ def esActivo(nombreDocente):
     else:
         return False
 
-# Esta función recibe las listas con los resultados de los docentes y los nombres, y obtiene el nombre del docente
-# que se encuentra en la posición en que mayor número se obtuvo y además está activo en la bd
-def mayorActivo(listaD, listaR):
-    maximo = max(listaR)
-    for i in range(len(listaR)):
-        if listaR[i] == maximo:
-            if esActivo(listaD[i]):
-                return listaD[i]
-            else:
-                listaD.pop(i)
-                listaR.pop(i)
-                return mayorActivo(listaD, listaR)
-
-
-def recomendador(listaDocentes, listaRespuestas):
-    maximo = max(listaRespuestas)
-    #print("EL NUMERO MAXIMO DE LA LISTA ES : ")
-    #print(maximo)
-    if len(listaRespuestas) == 1:
-        if esActivo(listaDocentes[0]):
-            #print("PRIMER CASO, VOY A RETORNAR: ")
-            #print(listaDocentes[0])
-            return listaDocentes[0]
-        else:
-            #print("SEGUNDO CASO, VOY A RETORNAR: ")
-            #print("LO SENTIMOS, NO EXISTEN DATOS EN LA BASE")
-            return "LO SENTIMOS, NO EXISTEN DATOS EN LA BASE DE DATOS PARA RECOMENDAR UN DOCENTE DE ESTA ASIGNATURA"
-    elif listaRespuestas.count(maximo) > 1:
-        #print("TERCER CASO, VOY A RETORNAR: ")
-        #print(mayorActivo(listaDocentes, listaRespuestas))
-        return mayorActivo(listaDocentes,listaRespuestas)
-    elif esActivo(listaDocentes[listaRespuestas.index(max(listaRespuestas))]):
-        variable = listaDocentes[listaRespuestas.index(max(listaRespuestas))]
-        #print("CUARTO CASO, VOY A RETORNAR: ")
-        #print(variable)
-        return variable
-    else:
-        posicion = listaRespuestas.index(max(listaRespuestas))
-        listaDocentes.pop(posicion)
-        listaRespuestas.pop(posicion)
-        return recomendador(listaDocentes, listaRespuestas)
-
 
 # DE AQUI PARA ABAJO SON METODOS PARA HACER SPEARMAN
 def calculaDiferencia(lista1, lista2):
@@ -173,7 +124,8 @@ def calculaSuma(lista):
     return resp
 
 
-#En esta función se aplica el tipo de ordenado burbuja, para 
+#En esta función se aplica el tipo de ordenado burbuja, para los resultados obtenidos de aplicar spearman y dejar ordenados a los docentes 
+# en cuanto a su mayor correlación
 def bubbleSort(listaRespuestas, listaDocentes):
     for recorrido in range(1,len(listaRespuestas)):
         for posicion in range(len(listaRespuestas) - recorrido):
@@ -196,15 +148,31 @@ def eliminaIguales(listaRespuestas, listaDocentes):
     for i in listaDocentes:
         if i not in newListaDocentes:
             newListaDocentes.append(i)
-            newListaRespuestas.append(index(listaDocentes[i]))
+            newListaRespuestas.append(listaRespuestas[listaDocentes.index(i)])
     return newListaRespuestas,newListaDocentes
 
 
+#Funcion que elimina los docentes que no estén activos en la lista de docentes, Esto es para pasar ya la recomendación final
+def eliminaInactivos(listaDocentes):
+    newListaDocentes = []
+    for i in listaDocentes:
+        if esActivo(i):
+            newListaDocentes.append(i)
+    return newListaDocentes
+
+
+#PROBAANNDOOOO EL POPPOPPUPPPP
+class RecomendacionDocente(DetailView):
+    model = Recomendacion
+    template_name = 'top_docentes.html'
+    context_object_name = 'objeto'
+
+
+#FUNCION PRINCIPAL ENCARGADA DE REALIZAR LA RECOMENDACIÓN DE DOCENTES
 def matrizConfusion(request):
     if request.method == 'POST':
         asig = request.POST.get('asignatura_escogida')
-        print("LA ASIGNATURA ESCOGIDA ES :")
-        print(asig)
+        #PRIMERO OBTENEMOS TODOS LOS DATOS PROPORCIONADOS POR EL ESTUDIANTE
         q1 = float('0' + request.POST.get('pregunta1'))
         q2 = float('0' + request.POST.get('pregunta2'))
         q3 = float('0' + request.POST.get('pregunta3'))
@@ -215,10 +183,12 @@ def matrizConfusion(request):
         q8 = float('0' + request.POST.get('pregunta8'))
 
         cuestionario = [q1, q2, q3, q4, q5, q6, q7, q8]
+        #REALIZAMOS LA BUSQUEDA DE DATOS DE DOCENTES QUE DICTEN LA ASIGNATURA SELECCIONADA POR EL ESTUDIANTE
         bd = asignaturaProf.objects.filter(nombre=asig)
         docente = []
         respuestas = []
         for i in bd:
+            #PARA CADA ITEM DE LA PREGUNTA, HACEMOS LA RELACIÓN CON LAS PREGUNTAS DOCENTE
             first = (float(i.p9) + float(i.p10))/2
             second = (float(i.p19) + float(i.p11) + float(i.p12))/3
             fifth = (float(i.p14) + float(i.p18))/2
@@ -226,11 +196,14 @@ def matrizConfusion(request):
             preguntas = [first, second, float(i.p10),
                          float(i.p12), fifth, float(i.p15), seventh, float(i.p20)]
 
+
+            #APLICAMOS EL COEFICIENTE DE CORRELACION DE SPEARMAN ENTRE LOS DATOS PROPORCIONADOS POR EL ESTUDIANTE Y LAS PREGUNTAS RELACIONADAS A
+            #CALIFICACION DOCENTE DE CADA DOCENTE
             dif = calculaDiferencia(cuestionario, preguntas)
             vec = vectorCuadrado(dif)
             spear = 1 - ((6 * calculaSuma(vec))/((len(vec) ** 3) - len(vec)))
-            #AQUI VOY A SACAR LO QUE SEA QUE TENGA EN COMENTARIOS SI ES QUE EXISTEN COMENTARIOS DEL DOCENTE, LO PROMEDIO Y LO SUMO CON  
-            # EL RESULTADO QUE TENGA DE HACER SPEAR
+            #LUEGO DE HACER EL COEFICIENTE DE CONRRELACION DE SPEARMAN, SE MIRA SI DE ESE DOCENTE, EN LA ASIGNATURA ESPECÍFICA LOS ESTUDIANTES HAN
+            #REALIZADO COMENTARIOS, SI LOS HAN HECHO, SE REALIZA EL PROMEDIO DE TODOS LOS COMENTARIOS Y SE AÑADE AL COEFICIENTE DE CORRELACIÓN
             resp = asignaturaProf.objects.filter(nombre=asig, docente=i.docente)
             coment = 0
             cantidad = 0
@@ -242,38 +215,74 @@ def matrizConfusion(request):
                         cantidad = cantidad + 1
                         coment = coment + k.polaridad
             
-            #print("SPEAR SIN AÑADIR LOS COMENTARIOS DEL DOCENTE VALE : ")
-            #print(spear)
-            #print("SPEAR AÑADIENDO COMENTARIOS VALE : ")
             if cantidad == 0:
                 spear = spear + float(coment)
             else:
                 spear = spear + float(coment/cantidad)
-            print(spear)
             docente.append(i.docente)
             respuestas.append(spear)
 
-
-        print("ESTA ES LA LISTA DE DOCENTES : ")
-        print(docente)
-        print("ESTA ES LA LISTA DE RESPUESTAS: ")
-        print(respuestas)
-        resultado = recomendador(docente, respuestas)
-        #print("ESTO ES LO QUE OBTENGO AL FINAL DE TODOOO: ")
-        #print(resultado)
+        #SE ORDENAN LOS RESULTADOS OBTENIDOS DE MAYOR A MENOR JUNTO CON LOS RESPECTIVOS NOMBRES DE LOS DOCENTES
         r, d = bubbleSort(respuestas,docente)
-        print("")
-        print("ESTA SERIA MI LISTA DE RESPUESTAS ORDENADAS: ")
-        print(r)
-        print("Y ESTA MI LISTA DE DOCENTES ORDENADOS: ")
-        print(d)
-        #print("LOS DATOS DESPUÉS DE LA ELIMINACIÓN DE IGUALES SON : ")
-        #re, do = eliminaIguales(r,d)
-        #print("ESTA ES LA LISTA DE DOCENTES TOP: ")
-        #print(do)
-        #print("ESTA ES LA LISTA DE RESPUESTAS TOP: ")
-        #print(re)
-        messages.success(request, resultado)
 
-        #return redirect('principalUser')
-    return render(request, "users/formularioBusqueda.html", {})
+        #SE ELIMINAN LOS DOCENTES QUE ESTÉN COMPITIENDO POR HABER OBTENIDO UNA BUENA CORRELACIÓN EN MÁS DE UN PERIODO
+        re, do = eliminaIguales(r,d)
+        
+        #AHORA SE ELIMINAN LOS DOCENTES QUE SE ENCUENTREN INACTIVOS (DOCENTES QUE YA NO DÁN CLASE EN LA SEDE)
+        docentesFinales = eliminaInactivos(do)
+
+        #Luego de la eliminación de docentes inactivos, se revisa si en la lista aún hay docentes para recomendar, si no los hay se retorna
+        #un mensaje indicandolo
+        if len(docentesFinales) == 0:
+            resultado = "LO SENTIMOS, NO EXISTEN DATOS EN LA BASE DE DATOS PARA RECOMENDAR UN DOCENTE DE ESTA ASIGNATURA"
+            messages.success(request, resultado)
+            return render(request, "users/formularioBusqueda.html", {})
+        else:
+            #Si existen docentes, miramos si este docente ya ha sido recomendado antes y le sumamos 1 a su recomendacion (esto para las gráficas en
+            # la sección de administrador)
+            for i in docentesFinales:
+                existeRecomendacion = Recomendacion.objects.filter(asignatura=asig, profesor=i).exists()
+                if existeRecomendacion:
+                    agregar = Recomendacion.objects.get(asignatura=asig, profesor=i)
+                    agregar.top = agregar.top + 1
+                    agregar.save()
+                else:
+                    recomend = Recomendacion(asignatura=asig, profesor=i, top=1)
+                    recomend.save()
+            #Mandamos el listado de docentes al template para mostrarlo
+            return render(request, "users/top_docentes.html", {'docentesFinales': docentesFinales})
+    else:
+        return render(request, "users/formularioBusqueda.html", {})
+
+
+#ESTA FUNCION REALIZA UNA BUSQUEDA EN LAS RECOMENDACIONES REALIZADAS Y RETORNA LOS DATOS EN FORMA DE JSON
+@login_required
+def datosDocentes(request):
+    datosDocentes = Recomendacion.objects.all()
+    
+    lab = []
+    datos = []
+    backgound = []
+    border = []
+    for item in datosDocentes:
+        lab.append(item.profesor)
+        datos.append(item.top)
+        r = lambda: random.randint(0,255)
+        r = lambda: random.randint(0,255)
+        backgound.append('#%02X%02X%02X' % (r(), r(), r()))
+        border.append('#%02X%02X%02X' % (r(), r(), r()))
+
+    context = {
+        "type": "horizontalBar",
+        "data": {
+            "labels": lab,
+            "datasets": [{
+            "label": '# de Recomendaciones',
+            "data": datos,
+            "backgroundColor": backgound,
+            "borderColor": border,
+            "borderWidth": 1,
+            }]
+        }
+    }
+    return HttpResponse(json.dumps(context), content_type='application/json; utf-8')

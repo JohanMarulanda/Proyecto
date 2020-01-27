@@ -27,8 +27,7 @@ class asignaturaProf(models.Model):
 
     class Meta:
         db_table = 'asignatura_asignaturaprof'
-        #verbose_name = 'asignatura'
-        #verbose_name_plural = 'asignaturas'
+        
 
     def __str__(self):
         # Django usa esto cuando necesita convertir objecs a string
@@ -57,3 +56,16 @@ class activo(models.Model):
     def __str__(self):
         # Django usa esto cuando necesita convertir objecs a string
         return self.nombre
+
+class Recomendacion(models.Model):
+    id = models.AutoField(primary_key=True)
+    asignatura = models.CharField(max_length=255, default='')
+    profesor = models.CharField(max_length=255, default='')
+    top = models.IntegerField()
+
+    class Meta:
+        db_table = 'asignatura_recomendacion'
+
+    def __str__(self):
+        # Django usa esto cuando necesita convertir objecs a string
+        return self.id

@@ -93,7 +93,7 @@ Realizar Pregunta
                         <div class="caption post-detail-item">
                             <h3 style="color:chocolate;"><a
                                     href="{% url 'detalles_pregunta' obj.id %}">{{ obj.pregunta }}</a></h3>
-                            <p>{{ obj.descripcion }}</p>
+                            <p>{{ obj.descripcion }}</p><h6>{{obj.carrera}} - {{obj.asignatura}}</h6>
                             <a href="{% url 'detalles_pregunta' obj.id %}">Comments: {{ obj.comments.count }}</a>
                         </div>
                     </div>

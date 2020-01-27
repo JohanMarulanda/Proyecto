@@ -2,6 +2,7 @@ from django import forms
 from .models import asignaturaProf
 from .models import Comentario
 from .models import activo
+from .models import Recomendacion
 
 
 class AsignaturaForm(forms.ModelForm):
@@ -21,3 +22,10 @@ class ActivoForm(forms.ModelForm):
     class Meta:
         model = activo
         fields = ['nombre']
+
+
+class RecomendacionForm(forms.ModelForm):
+    class Meta:
+        model = Recomendacion
+        fields = ['asignatura', 'profesor', 'top']
+

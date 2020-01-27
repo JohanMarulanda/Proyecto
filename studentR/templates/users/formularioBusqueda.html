@@ -15,7 +15,7 @@
 <!-- CSS Files -->
 <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet" />
 <link href="{% static '/css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
-<!-- CSS Just for demo purpose, don't include it in your project -->
+
 <link href="{% static '/css/demo.css' %}" rel="stylesheet" />
 <link href="{% static '/css/lumino.min.css' %}" rel="stylesheet">
 {% endblock css %}
@@ -84,7 +84,7 @@ Realizar Pregunta
 {% block main %}
 <div class="col-md-8">
     <div class="card">
-        <div class="card-header ">
+        <div class="card-header">
             <h4 class="card-title">Formulario busqueda docente:</h4>
             <p class="card-category">
                 Por favor, seleccione la asignatura para la que está buscando una recomendación y responda el siguiente
@@ -103,7 +103,8 @@ Realizar Pregunta
                 </ul>
                 {% endif %}
             </div>
-            <form id="formulario" method="POST" class="post-form" enctype="multipart/form-data" action="{% url 'matrizConfusion' %}">
+            <form id="formulario" method="POST" class="post-form" enctype="multipart/form-data"
+                action="{% url 'matrizConfusion' %}">
                 {% csrf_token %}
 
                 <br>
@@ -163,7 +164,8 @@ Realizar Pregunta
 
                 <div class="filas">
                     <div class="etiquetas">
-                        <label id="number-label" for="radio-buttons">Como estudiante, ¿Qué tan importante es el rol que juega
+                        <label id="number-label" for="radio-buttons">Como estudiante, ¿Qué tan importante es el rol que
+                            juega
                             el acompañamiento del docente durante tu proceso de aprendizaje?</label>
                     </div>
 
@@ -315,7 +317,8 @@ Realizar Pregunta
 
                 <div class="filas">
                     <div class="etiquetas">
-                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que el docente disponga
+                        <label id="number-label" for="radio-buttons">¿Qué tan importante consideras que el docente
+                            disponga
                             de
                             su
                             tiempo para consultas y asesorías?</label>
@@ -460,22 +463,21 @@ Realizar Pregunta
 <script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
 <!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
 <script src="{% static '/js/demo.js' %}"></script>
-<script type="text/javascript">
-    function listar_top(mensaje)
-    {
-        $.confirm({
-            title: false,
-            content: 'url:top_docentes.html',
-            onContentReady: function () {
-                // when content is fetched & rendered in DOM
-                alert('onContentReady');
-                var self = this;
-                this.buttons.ok.disable();
-                this.$content.find('.btn').click(function () {
-                    self.$content.find('input').val('Chuck norris');
-                    self.buttons.ok.enable();
-                });
-            }
+<script>
+    function abrir_modal(url) {
+        $('#ventana_modal').load(url, function () {
+            $(this).modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+            $(this).modal('show');
+        });
+        return false;
+    }
+
+    function cerrar_modal() {
+        $('#ventana_modal').modal('hide');
+        return false;
     }
 </script>
 

@@ -63,11 +63,20 @@ Realizar Pregunta
 {% endblock añadirMenu %}
 
 {% block main %}
+<div class="col-md-8">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Nuevo comentario</h4>
+        </div>
 
-<h1>New comment</h1>
-<form method="POST" class="post-form">{% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="save btn btn-default">Send</button>
-</form>
-
+        <div class="card-body">
+            <div class="form-group">
+                <form method="POST" class="post-form">{% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="save btn btn-default">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock main %}

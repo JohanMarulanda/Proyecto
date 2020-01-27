@@ -63,22 +63,35 @@ Realizar Pregunta
 {% endblock añadirMenu %}
 
 {% block main %}
-<div class="post">
-    <h2>{{ preg.pregunta }}</h2>
-    <p>{{ preg.descripcion|linebreaksbr }}</p>
+<div class="col-md-8">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">{{ preg.pregunta }}</h4>
+            <p class="card-category">
+                {{ preg.descripcion|linebreaksbr }}
+            </p>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group">
+                {% for comment in preg.comments.all %}
+                <div class="comment">
+                    <div class="date">{{ comment.created_date }}</div>
+                    <h6>Publicado el usuario: {{comment.autor}}</h6>
+                    <p>{{ comment.text|linebreaks }}</p>
+                </div>
+                {% empty %}
+                <p>No comments here yet :(</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <label class="col-sm-1 col-form-label"></label>
+            <div class="col-sm-4">
+                <a class="btn btn-default" href="{% url 'add_comment_to_question' preg.id %}">Add comment</a>
+            </div>
+        </div>
+    </div>
 </div>
-
-<hr>
-<a class="btn btn-default" href="{% url 'add_comment_to_question' preg.id %}">Add comment</a>
-
-{% for comment in preg.comments.all %}
-<div class="comment">
-    <div class="date">{{ comment.created_date }}</div>
-    <strong>{{ comment.author }}</strong>
-    <p>{{ comment.text|linebreaks }}</p>
-</div>
-{% empty %}
-<p>No comments here yet :(</p>
-{% endfor %}
-
 {% endblock main %}

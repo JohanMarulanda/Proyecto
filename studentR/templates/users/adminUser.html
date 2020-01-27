@@ -1,50 +1,23 @@
 {% extends 'index.html' %}
 {% load staticfiles %}
 
-<!-- SECCION PARA AÑADIR COMENTARIO -->
-{% block reabout %}
-{% url 'show' %}
-{% endblock reabout %}
+{% block logo %}
+{% url 'administrador' %}
+{% endblock logo %}
 
-{% block about %}
-Añadir Comentario
-{% endblock about %}
+{% block navigation %}
+<ul class="nav">
+    <li>
+        <a class="nav-link" href="{% url 'grafica_recomendados' %}">
+            <i class="nc-icon nc-chart-pie-35"></i>
+            <p>Consultar Estadisticas</p>
+        </a>
+    </li>
 
-<!-- SECCION PARA BUSCAR UNA ASIGNATURA -->
-{% block resingup %}
-{% url 'formularioBusqueda' %}
-{% endblock resingup%}
-
-{% block singup %}
-Buscar Recomendacion
-{% endblock singup %}
-
-
-<!-- SECCION PARA AÑADIR COMENTARIO -->
-{% block resingin %}
-{% url 'crear_publicacion' %}
-{% endblock resingin %}
-
-{% block singin %}
-Realizar Pregunta
-{% endblock singin %}
-
-<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
-{% block añadirMenu %}
-<li>
-    <a class="nav-link" href="{% url 'responder_preguntas' user.id %}">
-        <i class="nc-icon nc-chart-pie-35"></i>
-        <p>Responder Preguntas<output></output></p>
-    </a>
-</li>
-
-<li>
-    <a class="nav-link" href="{% url 'listar_publicacion' user.id %}">
-        <i class="nc-icon nc-chart-pie-35"></i>
-        <p>Mis Preguntas<output></output></p>
-    </a>
-</li>
-{% endblock añadirMenu %}
+</ul>
+</div>
+</div>
+{% endblock navigation %}
 
 {% block board %}
 <ul class="navbar-nav ml-auto">
@@ -62,7 +35,6 @@ Realizar Pregunta
 {% endblock board %}
 
 {% block main %}
-
 <div class="content">
     <div class="animated fadeIn">
         <div class="row">
@@ -71,7 +43,7 @@ Realizar Pregunta
                     <div class="card bg-primary">
                         <div class="card-body">
                             <blockquote class="blockquote mb-0 text-light text-center">
-                                <h1 class="text-light">{{ user.username | upper }} BIENVENIDO A STUDENTR</h1>
+                                <h1 class="text-light">{{ user.username | upper }} BIENVENIDO A STUDENTR USUARIO ADMINISTRADOR</h1>
                                 <footer class="blockquote-footer text-light">Un sistema de recomentación de docentes
                                 </footer>
                             </blockquote>

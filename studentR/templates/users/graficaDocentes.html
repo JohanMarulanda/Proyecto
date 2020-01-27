@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 {% load staticfiles %}
 
+
 {% block css %}
 <meta charset="utf-8" />
 <link rel="apple-touch-icon" sizes="76x76" href="{% static '/img/apple-icon.png' %}">
@@ -15,56 +16,28 @@
 <!-- CSS Files -->
 <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet" />
 <link href="{% static '/css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
-<link href="{% static '/css/demo.css' %}" rel="stylesheet" />
-<link href="{% static '/css/lumino.min.css' %}" rel="stylesheet">
-{% endblock css %}
-
-<!-- SECCION PARA AÑADIR COMENTARIO -->
-{% block reabout %}
-{% url 'show' %}
-{% endblock reabout %}
-
-{% block about %}
-Añadir Comentario
-{% endblock about %}
-
-<!-- SECCION PARA BUSCAR UNA ASIGNATURA -->
-{% block resingup %}
-{% url 'formularioBusqueda' %}
-{% endblock resingup%}
-
-{% block singup %}
-Buscar Recomendación
-{% endblock singup %}
+{% endblock %}
 
 
-<!-- SECCION PARA AÑADIR COMENTARIO -->
-{% block resingin %}
-{% url 'crear_publicacion' %}
-{% endblock resingin %}
+{% block logo %}
+{% url 'administrador' %}
+{% endblock logo %}
 
-{% block singin %}
-Realizar Pregunta
-{% endblock singin %}
+{% block navigation %}
+<ul class="nav">
+    <li>
+        <a class="nav-link" href="{% url 'grafica_recomendados' %}">
+            <i class="nc-icon nc-chart-pie-35"></i>
+            <p>Consultar Estadisticas</p>
+        </a>
+    </li>
 
-
-<!-- SECCION PARA AÑADIR MÁS DATOS AL MENU -->
-{% block añadirMenu %}
-<li>
-    <a class="nav-link" href="{% url 'responder_preguntas' user.id %}">
-        <i class="nc-icon nc-chart-pie-35"></i>
-        <p>Responder Preguntas<output></output></p>
-    </a>
-</li>
-
-<li>
-    <a class="nav-link" href="{% url 'listar_publicacion' user.id %}">
-        <i class="nc-icon nc-chart-pie-35"></i>
-        <p>Mis Preguntas<output></output></p>
-    </a>
-</li>
-{% endblock añadirMenu %}
+</ul>
+</div>
+</div>
+{% endblock navigation %}
 
 {% block board %}
 <ul class="navbar-nav ml-auto">
@@ -84,27 +57,12 @@ Realizar Pregunta
 {% block main %}
 <div class="col-md-8">
     <div class="card">
-        <div class="card-header ">
-            <h4 class="card-title">Lista de docentes recomentados</h4>
+        <div class="card-header">
+            <h4 class="card-title">Top docentes más Recomendados</h4>
         </div>
-        
         <div class="card-body">
-            <table id="datatable" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Docente</th>
-                        <th>Puesto</th>
-                    </tr>
-                </thead>
-                <tbody id="myTable">
-                    {% for objeto in docentesFinales %}
-                    <tr>
-                        <td>{{ objeto }}</td>
-                        <td>{{ forloop.counter }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <canvas id="myChart" width="600" height="300"></canvas>
+            {{data}}
         </div>
     </div>
 </div>
@@ -116,7 +74,6 @@ Realizar Pregunta
 <script src="{% static '/js/core/jquery.3.2.1.min.js' %}"></script>
 <script src="{% static '/js/core/popper.min.js' %}"></script>
 <script src="{% static '/js/core/bootstrap.min.js' %}"></script>
-<script src="{% static '/js/popup.js' %}"></script>
 <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
 <script src="{% static '/js/plugins/bootstrap-switch.js' %}"></script>
 <!--  Chartist Plugin  -->
@@ -127,23 +84,21 @@ Realizar Pregunta
 <script src="{% static '/js/light-bootstrap-dashboard.js' %}"></script>
 <!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
 <script src="{% static '/js/demo.js' %}"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-<script>
-    function abrir_modal(url) {
-        $('#ventana_modal').load(url, function () {
-            $(this).modal({
-                backdrop: 'static',
-                keyboard: false
-            })
-            $(this).modal('show');
+<script type="text/javascript">$(document).ready(function () {
+        MuestraFormulario();
+    });
+    var MuestraFormulario = function () {
+        $.ajax({
+            url: "{% url 'top_recomendados' %}",
+            type: 'get',
+            dataType: 'json',
+
+
+            success: function (data) {
+                var ctx = document.getElementById("myChart");
+                var chart = new Chart(ctx, data);
+            }
         });
-        return false;
-    }
-
-    function cerrar_modal() {
-        $('#ventana_modal').modal('hide');
-        return false;
-    }
+    };
 </script>
-
 {% endblock scripts %}
